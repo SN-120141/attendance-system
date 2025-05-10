@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>勤怠入力</title>
+</head>
+<body>
+  <h1>勤怠入力フォーム</h1>
+  <form id="attendanceForm">
+    番号: <input type="number" name="id" required><br><br>
+    日付: <input type="date" name="date" required><br><br>
+    <button type="submit">送信</button>
+  </form>
+
+  <p id="response"></p>
+
+  <script>
+    document.getElementById("attendanceForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const data = {
+        id: formData.get("id"),
+        date: formData.get("date")
+      };
+
+      const res = await fetch("https://script.google.com/macros/s/AKfycbx0B2d5OXbnkHvN3RAUM3_T-xQEGCBXmMqq1fvGgZWi7LocbB9S6Gls5Dq-FMs7aVop/exec", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      const text = await res.text();
+      document.getElementById("response").innerText = text;
+    });
+  </script>
+</body>
+</html>
