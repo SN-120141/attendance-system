@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>出席フォーム</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
+    }
+    input, button {
+      padding: 0.5em;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>出席フォーム</h1>
+  <p>番号を入力して出席を記録してください。</p>
+  <input type="text" id="number" placeholder="例: 001">
+  <button onclick="submitAttendance()">出席する</button>
+
+  <p id="result" style="margin-top: 1em;"></p>
+
+  <script>
+    function submitAttendance() {
+      const number = document.getElementById("number").value.trim();
+      const result = document.getElementById("result");
+
+      if (!number) {
+        result.textContent = "番号を入力してください。";
+        return;
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbw8HGOeapaTnXYswNTNVV9LJg8wYoGmuGGnQOvDGHIgJ6fj0pJ2Hw4JqzZA3k398pA5MQ/exec", {
+        method: "POST",
+        mode: "no-cors", // CORS回避（レスポンスは受け取れませんが送信はされます）
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `number=${encodeURIComponent(number)}`
+      })
+      .then(response => {
+  console.log(response);  // 成功時にレスポンスをログに出力
+  result.textContent = "出席が記録されました。";
+  document.getElementById("number").value = "";
+})
+.catch(error => {
+  console.error(error);  // エラーが発生した場合にエラーログを出力
+  result.textContent = "送信中にエラーが発生しました。";
+});
+
+    }
+  </script>
+</body>
+</html>
